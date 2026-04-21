@@ -18,6 +18,27 @@ import UploadQueue from './components/UploadQueue.vue';
 const uploadQueue = ref([]);
 let sse = null;
 
+function upsertQueueItems(items) {
+  for (const item of items) {
+    const idx = uploadQueue.value.findIndex(existing => existing.id === item.id);
+    if (idx >= 0) {
+      uploadQueue.value[idx] = item;
+    } else {
+      uploadQueue.value.push(item);
+    }
+  }
+}
+
+async function fetchQueue() {
+  try {
+    const res = await fetch('/api/queue');
+    if (!res.ok) return;
+    uploadQueue.value = await res.json();
+  } catch {
+    // SSE will retry in the background; keep the current UI state.
+  }
+}
+
 function connectSSE() {
   sse = new EventSource('/api/progress');
   sse.onmessage = (e) => {
@@ -25,9 +46,7 @@ function connectSSE() {
     if (data.type === 'queue') {
       uploadQueue.value = data.queue;
     } else if (data.type === 'update') {
-      const idx = uploadQueue.value.findIndex(i => i.id === data.item.id);
-      if (idx >= 0) uploadQueue.value[idx] = data.item;
-      else uploadQueue.value.push(data.item);
+      upsertQueueItems([data.item]);
     }
   };
   sse.onerror = () => {
@@ -36,15 +55,27 @@ function connectSSE() {
   };
 }
 
-async function handleUpload(paths) {
-  await fetch('/api/upload', {
+async function handleUpload({ paths, syncWiki }) {
+  const res = await fetch('/api/upload', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ paths })
+    body: JSON.stringify({ paths, syncWiki })
   });
+  if (!res.ok) {
+    throw new Error(`HTTP ${res.status}`);
+  }
+  const data = await res.json();
+  if (Array.isArray(data.items) && data.items.length > 0) {
+    upsertQueueItems(data.items);
+  } else {
+    await fetchQueue();
+  }
 }
 
-onMounted(connectSSE);
+onMounted(() => {
+  fetchQueue();
+  connectSSE();
+});
 onUnmounted(() => sse?.close());
 </script>
 

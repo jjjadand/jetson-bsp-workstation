@@ -1,5 +1,13 @@
 onedrive_config.conf
 nas-uploader/server/db.json
+nas-uploader/server/queue.json
 nas-uploader/server/node_modules/
 nas-uploader/client/node_modules/
 nas-uploader/client/dist/
+nas-uploader/.run/
+nas-uploader/.codex/
+.codex
+.snapshots/
+.upload_cache.txt
+.vscode/
+.claude/
