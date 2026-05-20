@@ -1,0 +1,188 @@
+    "sku_114110307": {
+        "product_name": "reComputer Robotics J3010",
+        "zip_name_qflash": "mfi_recomputer-robo-orin-nano-4g-j401-gmsl-qspiflash-6.2-36.4.3-2026-02-06.tar.gz",
+        "zip_name_ssd": "mfi_recomputer-robo-orin-nano-4g-j401-gmsl-6.2-36.4.3-2026-02-06.tar.gz",
+    },
+    "sku_114110308": {
+        "product_name": "reComputer Robotics J3011",
+        "zip_name_qflash": "mfi_recomputer-robo-orin-nano-8g-j401-gmsl-qspiflash-6.2-36.4.3-2026-02-06.tar.gz",
+        "zip_name_ssd": "mfi_recomputer-robo-orin-nano-8g-j401-gmsl-6.2-36.4.3-2026-02-06.tar.gz",
+    },
+    "sku_114110309": {
+        "product_name": "reComputer Robotics J4011",
+        "zip_name_qflash": "mfi_recomputer-robo-orin-nx-8g-j401-gmsl-qspiflash-6.2-36.4.3-2026-02-05.tar.gz",
+        "zip_name_ssd": "mfi_recomputer-robo-orin-nx-8g-j401-gmsl-6.2-36.4.3-2026-02-05.tar.gz",
+    },
+    "sku_114110310": {
+        "product_name": "reComputer Robotics J4012",
+        "zip_name_qflash": "mfi_recomputer-robo-orin-nx-16g-j401-gmsl-qspiflash-6.2-36.4.3-2026-02-05.tar.gz",
+        "zip_name_ssd": "mfi_recomputer-robo-orin-nx-16g-j401-gmsl-6.2-36.4.3-2026-02-05.tar.gz",
+    },
+    "sku_100081106": {
+        "product_name": "reComputer Robotics J3010 with GMSL extension board",
+        "zip_name_qflash": "mfi_recomputer-robo-orin-nano-4g-j401-gmsl-qspiflash-6.2-36.4.3-2026-02-06.tar.gz",
+        "zip_name_ssd": "mfi_recomputer-robo-orin-nano-4g-j401-gmsl-6.2-36.4.3-2026-02-06.tar.gz",
+    },
+    "sku_100001302": {
+        "product_name": "reComputer Robotics J3011 with GMSL extension board",
+        "zip_name_qflash": "mfi_recomputer-robo-orin-nano-8g-j401-gmsl-qspiflash-6.2-36.4.3-2026-02-06.tar.gz",
+        "zip_name_ssd": "mfi_recomputer-robo-orin-nano-8g-j401-gmsl-6.2-36.4.3-2026-02-06.tar.gz",
+    },
+    "sku_100076917": {
+        "product_name": "reComputer Robotics J4011 with GMSL extension board",
+        "zip_name_qflash": "mfi_recomputer-robo-orin-nx-8g-j401-gmsl-qspiflash-6.2-36.4.3-2026-02-05.tar.gz",
+        "zip_name_ssd": "mfi_recomputer-robo-orin-nx-8g-j401-gmsl-6.2-36.4.3-2026-02-05.tar.gz",
+    },
+    "sku_100026552": {
+        "product_name": "reComputer Robotics J4012 with GMSL extension board",
+        "zip_name_qflash": "mfi_recomputer-robo-orin-nx-16g-j401-gmsl-qspiflash-6.2-36.4.3-2026-02-05.tar.gz",
+        "zip_name_ssd": "mfi_recomputer-robo-orin-nx-16g-j401-gmsl-6.2-36.4.3-2026-02-05.tar.gz",
+    },
+    "sku_100090853": {
+        "product_name": "reComputer Robotics J5011",
+        "zip_name_qflash": "mfi_recomputer-robo-agx-orin-32g-j501-qspiflash-6.2.1-36.4.4-2026-02-04.tar.gz",
+        "zip_name_ssd": "mfi_recomputer-robo-agx-orin-32g-j501-6.2.1-36.4.4-2026-02-04.tar.gz",
+    },
+    "sku_100060802": {
+        "product_name": "reComputer Robotics J5012",
+        "zip_name_qflash": "mfi_recomputer-robo-agx-orin-64g-j501-qspiflash-6.2.1-36.4.4-2026-02-04.tar.gz",
+        "zip_name_ssd": "mfi_recomputer-robo-agx-orin-64g-j501-6.2.1-36.4.4-2026-02-04.tar.gz",
+    },
+    
+    "sku_114110311": {
+        "product_name": " reComputer Super J3010",
+        "zip_name_qflash": "mfi_recomputer-super-orin-nano-4g-j401-qspiflash-6.2-36.4.3-2026-02-05.tar.gz",
+        "zip_name_ssd": "mfi_recomputer-super-orin-nano-4g-j401-6.2-36.4.3-2026-02-05.tar.gz",
+    },
+    "sku_114110312": {
+        "product_name": "reComputer Super J3011",
+        "zip_name_qflash": "mfi_recomputer-super-orin-nano-8g-j401-qspiflash-6.2-36.4.3-2026-02-06.tar.gz",
+        "zip_name_ssd": "mfi_recomputer-super-orin-nano-8g-j401-6.2-36.4.3-2026-02-06.tar.gz",
+    },
+
+    "sku_114110313": {
+        "product_name": "reComputer Super J4011",
+        "zip_name_qflash": "mfi_recomputer-super-orin-nx-8g-j401-qspiflash-6.2-36.4.3-2026-02-05.tar.gz",
+        "zip_name_ssd": "mfi_recomputer-super-orin-nx-8g-j401-6.2-36.4.3-2026-02-05.tar.gz",
+    },
+    "sku_114110314": {
+        "product_name": "reComputer Super J4012",
+        "zip_name_qflash": "mfi_recomputer-super-orin-nx-16g-j401-qspiflash-6.2-36.4.3-2026-02-05.tar.gz",
+        "zip_name_ssd": "mfi_recomputer-super-orin-nx-16g-j401-6.2-36.4.3-2026-02-05.tar.gz",
+    },
+    "sku_100029661": {
+        "zip_name_qflash": "mfi_recomputer-super-orin-nx-16g-j401-qspiflash-6.2-36.4.3-2026-02-05.tar.gz",
+        "zip_name_ssd": "mfi_recomputer-super-orin-nx-16g-j401-6.2-36.4.3-2026-02-05.tar.gz",
+    }
+    "sku_100090853": {
+        "product_name": "reComputer Robotics J5011",
+        "zip_name_qflash": "mfi_recomputer-robo-agx-orin-32g-j501-qspiflash-6.2.1-36.4.4-2026-02-04.tar.gz",
+        "zip_name_ssd": "mfi_recomputer-robo-agx-orin-32g-j501-6.2.1-36.4.4-2026-02-04.tar.gz",
+    },
+    "sku_100060802": {
+        "product_name": "reComputer Robotics J5012",
+        "zip_name_qflash": "mfi_recomputer-robo-agx-orin-64g-j501-qspiflash-6.2.1-36.4.4-2026-02-04.tar.gz",
+        "zip_name_ssd": "mfi_recomputer-robo-agx-orin-64g-j501-6.2.1-36.4.4-2026-02-04.tar.gz",
+    },
+    "sku_100076722": {
+        "product_name": "reComputer Robotics J5011 with GMSL extension board",
+        "zip_name_qflash": "mfi_recomputer-robo-agx-orin-32g-j501-qspiflash-6.2.1-36.4.4-2026-02-04.tar.gz",
+        "zip_name_ssd": "mfi_recomputer-robo-agx-orin-32g-j501-6.2.1-36.4.4-2026-02-04.tar.gz",
+    },
+    "sku_100032662": {
+        "product_name": "reComputer Robotics J5012  with GMSL extension board",
+        "zip_name_qflash": "mfi_recomputer-robo-agx-orin-64g-j501-qspiflash-6.2.1-36.4.4-2026-02-04.tar.gz",
+        "zip_name_ssd": "mfi_recomputer-robo-agx-orin-64g-j501-6.2.1-36.4.4-2026-02-04.tar.gz",
+    }
+    "sku_110110145": {
+        "zip_name_ssd": "mfi_recomputer-orin-nx-16g-devkit-5.1-35.5.0-2026-02-10.tar.gz",
+        "product_name": "reComputer J4012",
+        "zip_name_qflash": "mfi_recomputer-orin-nx-16g-devkit-qspiflash-5.1-35.5.0-2026-02-10.tar.gz",
+    },
+    "sku_114993489": {
+        "zip_name_ssd": "mfi_recomputer-orin-nx-16g-devkit-5.1-35.5.0-2026-02-10.tar.gz",
+        "script_name_ssd": "Universal_Burn_Script_arg",
+        "product_name": "reComputer J4012B",
+        "zip_name_qflash": "mfi_recomputer-orin-nx-16g-devkit-qspiflash-5.1-35.5.0-2026-02-10.tar.gz",
+    },
+    "sku_114993562": {
+        "zip_name_ssd": "mfi_recomputer-orin-nx-16g-devkit-5.1-35.5.0-2026-02-10.tar.gz",
+        "product_name": "reComputer J4012 2TB SSD",
+        "zip_name_qflash": "mfi_recomputer-orin-nx-16g-devkit-qspiflash-5.1-35.5.0-2026-02-10.tar.gz",
+    }
+    "sku_110110144": {
+        "zip_name_ssd": "mfi_recomputer-orin-nx-8g-industrial-5.1-35.5.0-2026-02-10.tar.gz",
+        "product_name": "reComputer J4011",
+        "zip_name_qflash": "mfi_recomputer-orin-nx-8g-industrial-qspiflash-5.1-35.5.0-2026-02-10.tar.gz",
+    },
+    "sku_114993488": {
+        "zip_name_ssd": "mfi_recomputer-orin-nx-8g-devkit-5.1-35.5.0-2026-02-10.tar.gz",
+        "product_name": "reComputer J4011B",
+        "zip_name_qflash": "mfi_recomputer-orin-nx-8g-devkit-qspiflash-5.1-35.5.0-2026-02-10.tar.gz",
+    },
+    "sku_110110146": {
+        "product_name": "reComputer J3010",
+        "zip_name_qflash": "mfi_recomputer-orin-nano-4g-devkit-qspiflash-5.1-35.5.0-2026-02-10.tar.gz",
+        "zip_name_ssd": "mfi_recomputer-orin-nano-4g-devkit-5.1-35.5.0-2026-02-10.tar.gz",
+    },
+    "sku_114993486": {
+        "product_name": "reComputer J3010B",
+        "zip_name_qflash": "mfi_recomputer-orin-nano-4g-devkit-qspiflash-5.1-35.5.0-2026-02-10.tar.gz",
+        "zip_name_ssd": "mfi_recomputer-orin-nano-4g-devkit-5.1-35.5.0-2026-02-10.tar.gz",
+    },
+    "sku_110110147": {
+        "zip_name_ssd": "mfi_recomputer-orin-nano-8g-devkit-5.1-35.5.0-2026-02-10.tar.gz",
+        "product_name": "reComputer J3011",
+        "zip_name_qflash": "mfi_recomputer-orin-nano-8g-devkit-qspiflash-5.1-35.5.0-2026-02-10.tar.gz",
+    }
+      "sku_114110250": {
+        "zip_name_ssd": "mfi_reserver-orin-nano-4g-industrial-5.1-35.5.0-2026-02-10.tar.gz",
+        "script_name_ssd": "Universal_Burn_Script_arg",
+        "product_name": "reServer Industrial J3010",
+        "zip_name_qflash": "mfi_reserver-orin-nano-4g-industrial-qspiflash-5.1-35.5.0-2026-02-10.tar.gz",
+    },
+    "sku_114110249": {
+        "zip_name_ssd": "mfi_reserver-orin-nano-8g-industrial-5.1-35.5.0-2026-02-10.tar.gz",
+        "script_name_ssd": "Universal_Burn_Script_arg",
+        "product_name": "reServer Industrial J3011",
+        "zip_name_qflash": "mfi_reserver-orin-nano-8g-industrial-qspiflash-5.1-35.5.0-2026-02-10.tar.gz",
+    },
+    "sku_114110248": {
+        "zip_name_ssd": "mfi_reserver-orin-nx-8g-industrial-5.1-35.5.0-2026-02-10.tar.gz",
+        "script_name_ssd": "Universal_Burn_Script_arg",
+        "product_name": "reServer Industrial J4011",
+        "zip_name_qflash": "mfi_reserver-orin-nx-8g-industrial-qspiflash-5.1-35.5.0-2026-02-10.tar.gz",
+    },
+    "sku_114110247": {
+        "zip_name_ssd": "mfi_reserver-orin-nx-16g-industrial-5.1-35.5.0-2026-02-11.tar.gz",
+        "script_name_ssd": "Universal_Burn_Script_arg",
+        "product_name": "reServer Industrial J4012",
+        "zip_name_qflash": "mfi_reserver-orin-nx-16g-industrial-qspiflash-5.1-35.5.0-2026-02-11.tar.gz",
+    }
+    "sku_110110190": {
+        "zip_name_ssd": "mfi_recomputer-orin-nx-8g-industrial-5.1-35.5.0-2026-02-10.tar.gz",
+        "script_name_ssd": "Universal_Burn_Script_arg",
+        "product_name": "reComputer Industrial J4011",
+        "zip_name_qflash": "mfi_recomputer-orin-nx-8g-industrial-qspiflash-5.1-35.5.0-2026-02-10.tar.gz",
+    },
+    "sku_110110191": {
+        "script_name_ssd": "Universal_Burn_Script_arg",
+        "product_name": "reComputer Industrial J4012",
+        "zip_name_ssd": "mfi_recomputer-orin-nx-16g-industrial-5.1-35.5.0-2026-02-10.tar.gz",
+        "zip_name_qflash": "mfi_recomputer-orin-nx-16g-industrial-qspiflash-5.1-35.5.0-2026-02-10.tar.gz",
+    },
+    "sku_110110192": {
+        "zip_name_ssd": "mfi_recomputer-orin-nano-4g-industrial-5.1-35.5.0-2026-02-09.tar.gz",
+        "script_name_ssd": "Universal_Burn_Script_arg",
+        "product_name": "reComputer Industrial J3010",
+        "zip_name_qflash": "mfi_recomputer-orin-nano-4g-industrial-qspiflash-5.1-35.5.0-2026-02-09.tar.gz",
+    },
+    "sku_110110193": {
+        "zip_name_ssd": "mfi_recomputer-orin-nano-8g-industrial-5.1-35.5.0-2026-02-10.tar.gz",
+        "product_name": "reComputer Industrial J3011",
+        "zip_name_qflash": "mfi_recomputer-orin-nano-8g-industrial-qspiflash-5.1-35.5.0-2026-02-10.tar.gz",
+    }      
+    
+
+
+

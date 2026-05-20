@@ -416,7 +416,7 @@ async function generateLegacyOneDriveLink(remote, basename) {
 
 // ===================== Wiki Update =====================
 async function updateWiki(cfg, filename, link) {
-  if (!cfg.wiki?.enabled) return { skipped: true };
+  if (!cfg.wiki?.enabled || cfg.wiki?.type === 'local_git') return { skipped: true };
 
   const wiki = cfg.wiki;
   const text = (wiki.template || '文件 {{filename}} 已上传: {{link}}')
@@ -452,6 +452,7 @@ function getWikiGitOptions(cfg = {}) {
   return {
     wikiBase: cfg.wiki?.localPath,
     remote: cfg.wiki?.gitRemote || 'origin',
+    remoteUrl: cfg.wiki?.gitRemoteUrl,
     branch: cfg.wiki?.gitBranch || undefined,
   };
 }
@@ -635,6 +636,19 @@ app.post('/api/sync-wiki', async (req, res) => {
 
     const wikiResult = await updateWikiDocs(NAS_ROOT, link, basename, wikiGitOptions);
     if (wikiResult.l4t.updated > 0) {
+      const gitResult = await commitWikiChanges(
+        `docs: update BSP download link for ${basename}`,
+        wikiResult.modifiedFiles,
+        wikiGitOptions
+      );
+      if (!gitResult.pushed) {
+        return res.status(500).json({
+          error: `Wiki changed locally but push failed: ${gitResult.pushError || 'unknown push error'}`,
+          l4t: wikiResult.l4t,
+          docs: wikiResult.docs,
+          git: gitResult,
+        });
+      }
       db[actualPath] = {
         ...db[actualPath],
         ...info,
@@ -642,14 +656,9 @@ app.post('/api/sync-wiki', async (req, res) => {
         wikiUpdated: true,
       };
       await writeDb(db);
-      const gitResult = await commitWikiChanges(
-        `docs: update BSP download link for ${basename}`,
-        wikiResult.modifiedFiles,
-        wikiGitOptions
-      );
       const message = !gitResult.committed
         ? `Wiki already up to date for ${wikiResult.l4t.matches.join(', ')}`
-        : `Wiki updated for ${wikiResult.l4t.matches.join(', ')}${gitResult.pushed ? ' and pushed' : gitResult.committed ? ' (commit only)' : ''}`;
+        : `Wiki updated for ${wikiResult.l4t.matches.join(', ')} and pushed`;
       return res.json({
         success: true,
         message,
@@ -835,8 +844,6 @@ function uploadFile(item) {
                   if (wikiResult.docs.length > 0) {
                     console.log(`[Upload] Tutorial docs updated: ${wikiResult.docs.join(', ')}`);
                   }
-                  item.wikiUpdated = true;
-
                   // Git commit and push
                   try {
                     const gitResult = await commitWikiChanges(
@@ -844,17 +851,17 @@ function uploadFile(item) {
                       wikiResult.modifiedFiles,
                       wikiGitOptions
                     );
-                    if (gitResult.committed) {
-                      if (gitResult.pushed) {
-                        console.log(`[Upload] Wiki changes committed and pushed`);
-                      } else {
-                        console.warn(`[Upload] Wiki committed locally but push failed: ${gitResult.pushError}`);
-                        console.warn(`[Upload] Please run 'git push' manually in the wiki repo`);
-                      }
+                    if (gitResult.pushed) {
+                      item.wikiUpdated = true;
+                      console.log(gitResult.committed
+                        ? `[Upload] Wiki changes committed and pushed`
+                        : `[Upload] Wiki already up to date and remote push verified`);
                     } else {
-                      console.log(`[Upload] Wiki already up to date: ${gitResult.reason}`);
+                      item.wikiUpdated = false;
+                      console.warn(`[Upload] Wiki changed locally but push failed: ${gitResult.pushError || 'unknown push error'}`);
                     }
                   } catch (gitErr) {
+                    item.wikiUpdated = false;
                     console.error(`[Upload] Git commit failed: ${gitErr.message}`);
                   }
                 } else {

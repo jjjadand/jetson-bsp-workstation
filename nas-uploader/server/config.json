@@ -10,6 +10,7 @@
     "type": "local_git",
     "localPath": "/home/darklee/wiki/latest/wiki-documents",
     "gitRemote": "origin",
+    "gitRemoteUrl": "git@github.com:jjjadand/wiki-documents.git",
     "gitBranch": "docusaurus-version",
     "url": "",
     "token": "",

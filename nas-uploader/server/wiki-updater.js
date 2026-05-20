@@ -277,14 +277,24 @@ export async function updateL4TData(nasRoot, oneDriveLink, mfiBasename, options 
 function git(args, options = {}) {
   return new Promise((resolve, reject) => {
     const cwd = options.cwd || getWikiBase(options);
-    const proc = spawn('git', args, { cwd, ...options });
+    const { wikiBase, remote, remoteUrl, branch, timeout = 120000, ...spawnOptions } = options;
+    const proc = spawn('git', args, { cwd, ...spawnOptions });
     let stdout = '';
     let stderr = '';
+    const timer = setTimeout(() => {
+      proc.kill('SIGTERM');
+      reject(new Error(`git ${args.join(' ')} timed out after ${timeout}ms`));
+    }, timeout);
     proc.stdout.on('data', d => { stdout += d.toString(); });
     proc.stderr.on('data', d => { stderr += d.toString(); });
     proc.on('close', code => {
+      clearTimeout(timer);
       if (code === 0) resolve(stdout.trim());
       else reject(new Error(`git ${args.join(' ')} failed (code ${code}): ${stderr || stdout}`));
+    });
+    proc.on('error', err => {
+      clearTimeout(timer);
+      reject(err);
     });
   });
 }
@@ -359,7 +369,36 @@ function deriveDocJetpackVersions(item, parsed) {
 
 function deriveDeviceLabels(product) {
   const labels = [];
-  const simpleMatch = String(product || '').match(/^j(\d{3})(\d)([a-z]+)$/);
+  const value = String(product || '');
+
+  const j501MiniMatch = value.match(/^j501mini-agx-orin-(\d+g)$/);
+  if (j501MiniMatch) {
+    return [
+      'Robotics J501 Mini',
+      'reComputer Robotics J50 Mini',
+      'reComputer Mini J501',
+      'J501 Mini',
+      'J501-Mini',
+    ];
+  }
+
+  const j501RoboticsMatch = value.match(/^j501-agx-orin-(\d+g)$/);
+  if (j501RoboticsMatch) {
+    return [
+      'reComputer Robotics J501',
+      'Robotics J501',
+    ];
+  }
+
+  const j501CarrierMatch = value.match(/^j501-carrier AGX-Orin \d+g$/);
+  if (j501CarrierMatch) {
+    return [
+      'reServer Industrial J501',
+      'reServer J501',
+    ];
+  }
+
+  const simpleMatch = value.match(/^j(\d{3})(\d)([a-z]+)$/);
   if (!simpleMatch) return labels;
 
   const [, prefix, ramCode, suffix] = simpleMatch;
@@ -374,6 +413,107 @@ function deriveDeviceLabels(product) {
   };
 
   return prefixMap[suffix] || labels;
+}
+
+function getProductDocScope(item, parsed) {
+  const product = String(item?.product || '');
+  const basename = String(parsed?.basename || '');
+
+  if (product.startsWith('j501mini-') || basename.startsWith('mfi_recomputer-mini-')) {
+    return {
+      includePaths: [
+        '/Carrier_Boards/J501_Mini/',
+        '/reComputer_Robotics_J50_Mini/',
+      ],
+      includeLabels: [
+        'Robotics J501 Mini',
+        'reComputer Robotics J50 Mini',
+        'reComputer Mini J501',
+        'J501 Mini',
+        'J501-Mini',
+      ],
+      excludePaths: [
+        '/Carrier_Boards/J501/',
+        '/reComputer_Robotics_J50/',
+        '/reServer_Jetson_Series/',
+      ],
+    };
+  }
+
+  if (product.startsWith('j501-agx-orin-') || basename.startsWith('mfi_recomputer-robo-agx-orin-')) {
+    return {
+      includePaths: [
+        '/reComputer_Robotics_J50/',
+      ],
+      includeLabels: [
+        'reComputer Robotics J501',
+        'Robotics J501',
+      ],
+      excludePaths: [
+        '/Carrier_Boards/J501_Mini/',
+        '/reComputer_Robotics_J50_Mini/',
+        '/Carrier_Boards/J501/',
+      ],
+    };
+  }
+
+  if (product.startsWith('j501-carrier ') || basename.startsWith('mfi_reserver-')) {
+    return {
+      includePaths: [
+        '/Carrier_Boards/J501/',
+      ],
+      includeLabels: [
+        'reServer Industrial J501',
+        'reServer J501',
+      ],
+      excludePaths: [
+        '/Carrier_Boards/J501_Mini/',
+        '/reComputer_Robotics_J50/',
+        '/reComputer_Robotics_J50_Mini/',
+      ],
+    };
+  }
+
+  return null;
+}
+
+function pathContainsAny(relPath, fragments = []) {
+  return fragments.some(fragment => relPath.includes(fragment));
+}
+
+function contentContainsAny(content, labels = []) {
+  return labels.some(label => content.includes(label));
+}
+
+function shouldConsiderDocForProduct(relPath, content, item, parsed) {
+  const scope = getProductDocScope(item, parsed);
+  if (!scope) return true;
+
+  if (pathContainsAny(relPath, scope.excludePaths)) {
+    return false;
+  }
+
+  return pathContainsAny(relPath, scope.includePaths) || contentContainsAny(content, scope.includeLabels);
+}
+
+async function filterDocsByProductScope(docs, item, parsed, options = {}) {
+  const scope = getProductDocScope(item, parsed);
+  if (!scope) return docs;
+
+  const filtered = [];
+  for (const relPath of docs) {
+    const absPath = path.join(getWikiBase(options), relPath);
+    let content = '';
+    try {
+      content = await fs.readFile(absPath, 'utf-8');
+    } catch {
+      continue;
+    }
+    if (shouldConsiderDocForProduct(relPath, content, item, parsed)) {
+      filtered.push(relPath);
+    }
+  }
+  return filtered;
 }
 
 function deriveModuleLabels(parsed) {
@@ -468,6 +608,7 @@ export async function updateGettingStartedDocs(item, parsed, oneDriveLink, newSh
     const absPath = path.join(getWikiBase(options), relPath);
     let content = await fs.readFile(absPath, 'utf-8');
 
+    if (!shouldConsiderDocForProduct(relPath, content, item, parsed)) continue;
     if (!rowLabels.some(label => content.includes(label))) continue;
     const tabRegex = /<TabItem\b[\s\S]*?<\/TabItem>/g;
     let changed = false;
@@ -540,7 +681,12 @@ export async function updateWikiDocs(nasRoot, oneDriveLink, mfiBasename, options
     const oldSha256 = item.sha256;
     const targetSha256 = newSha256 || item.sha256 || oldSha256;
     if (oldLink && oldLink !== oneDriveLink) {
-      const docs = await findDocsContainingLink(oldLink, options);
+      const docs = await filterDocsByProductScope(
+        await findDocsContainingLink(oldLink, options),
+        item,
+        parsed,
+        options
+      );
       for (const doc of docs) {
         const result = await replaceLinkInDoc(doc, oldLink, oneDriveLink, oldSha256, targetSha256, options);
         if (result.changed) {
@@ -577,44 +723,39 @@ async function pushWikiChanges(remote, branch, options = {}) {
   await git(['push', remote, `HEAD:${branch}`], options);
 }
 
-export async function commitWikiChanges(message, files = [], options = {}) {
-  // Configure git user if not already set
-  try { await git(['config', 'user.email'], options); } catch {
-    await git(['config', 'user.email', 'nas-uploader@local'], options);
-  }
-  try { await git(['config', 'user.name'], options); } catch {
-    await git(['config', 'user.name', 'NAS Uploader'], options);
-  }
-
-  // Stage files
-  if (files.length > 0) {
-    await git(['add', ...files], options);
-  } else {
-    await git(['add', '-A'], options);
-  }
-
-  let hasStagedChanges = true;
-  try {
-    await git(['diff', '--cached', '--quiet'], options);
-    hasStagedChanges = false;
-  } catch {
-    hasStagedChanges = true;
-  }
-
-  if (!hasStagedChanges) {
-    return { committed: false, reason: 'No staged changes to commit' };
-  }
-
-  // Commit
-  await git(['commit', '-m', message], options);
-
+async function ensureWikiRemote(options = {}) {
   const remote = options.remote || 'origin';
-  const branch = options.branch || await getCurrentBranch(options);
+  const remoteUrl = options.remoteUrl;
+  if (!remoteUrl) {
+    return { remote, remoteUrl: null, changed: false };
+  }
 
-  // Push, and if the remote moved meanwhile, rebase and retry once.
+  let changed = false;
+  try {
+    const currentUrl = await git(['remote', 'get-url', remote], options);
+    if (currentUrl !== remoteUrl) {
+      await git(['remote', 'set-url', remote, remoteUrl], options);
+      changed = true;
+    }
+  } catch {
+    await git(['remote', 'add', remote, remoteUrl], options);
+    changed = true;
+  }
+
+  const pushUrl = await git(['remote', 'get-url', '--push', remote], options);
+  if (pushUrl !== remoteUrl) {
+    await git(['remote', 'set-url', '--push', remote, remoteUrl], options);
+    changed = true;
+  }
+
+  return { remote, remoteUrl, changed };
+}
+
+async function pushWithRebase(remote, branch, options = {}) {
   let pushed = false;
   let pushError = null;
   let rebased = false;
+
   try {
     await pushWikiChanges(remote, branch, options);
     pushed = true;
@@ -637,5 +778,60 @@ export async function commitWikiChanges(message, files = [], options = {}) {
     }
   }
 
-  return { committed: true, pushed, pushError, remote, branch, rebased };
+  return { pushed, pushError, rebased };
+}
+
+export async function commitWikiChanges(message, files = [], options = {}) {
+  // Configure git user if not already set
+  try { await git(['config', 'user.email'], options); } catch {
+    await git(['config', 'user.email', 'nas-uploader@local'], options);
+  }
+  try { await git(['config', 'user.name'], options); } catch {
+    await git(['config', 'user.name', 'NAS Uploader'], options);
+  }
+
+  const remote = options.remote || 'origin';
+  const branch = options.branch || await getCurrentBranch(options);
+  const remoteResult = await ensureWikiRemote({ ...options, remote });
+
+  // Stage files
+  if (files.length > 0) {
+    await git(['add', ...files], options);
+  } else {
+    await git(['add', '-A'], options);
+  }
+
+  let hasStagedChanges = true;
+  try {
+    await git(['diff', '--cached', '--quiet'], options);
+    hasStagedChanges = false;
+  } catch {
+    hasStagedChanges = true;
+  }
+
+  if (!hasStagedChanges) {
+    const pushResult = await pushWithRebase(remote, branch, options);
+    return {
+      committed: false,
+      reason: 'No staged changes to commit',
+      remote,
+      remoteUrl: remoteResult.remoteUrl,
+      remoteChanged: remoteResult.changed,
+      branch,
+      ...pushResult,
+    };
+  }
+
+  // Commit
+  await git(['commit', '-m', message], options);
+
+  const pushResult = await pushWithRebase(remote, branch, options);
+  return {
+    committed: true,
+    remote,
+    remoteUrl: remoteResult.remoteUrl,
+    remoteChanged: remoteResult.changed,
+    branch,
+    ...pushResult,
+  };
 }

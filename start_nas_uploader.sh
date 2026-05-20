@@ -59,8 +59,16 @@ start_service() {
   echo "Starting $name"
   (
     cd "$dir"
-    nohup "${cmd[@]}" >"$log_file" 2>&1 &
-    echo $! >"$pid_file"
+    setsid nohup "${cmd[@]}" >"$log_file" 2>&1 </dev/null &
+    local launcher_pid=$!
+    sleep 0.2
+    if kill -0 "$launcher_pid" >/dev/null 2>&1; then
+      echo "$launcher_pid" >"$pid_file"
+    else
+      local service_pid
+      service_pid="$(pgrep -f "^${cmd[*]}$" | tail -n 1 || true)"
+      echo "${service_pid:-$launcher_pid}" >"$pid_file"
+    fi
   )
 
   sleep 2
@@ -80,7 +88,7 @@ mkdir -p "$RUN_DIR"
 ensure_dependencies "$SERVER_DIR"
 ensure_dependencies "$CLIENT_DIR"
 
-start_service "backend" "$SERVER_DIR" "$BACKEND_PID_FILE" "$BACKEND_LOG" npm run dev
+start_service "backend" "$SERVER_DIR" "$BACKEND_PID_FILE" "$BACKEND_LOG" node index.js
 start_service "frontend" "$CLIENT_DIR" "$FRONTEND_PID_FILE" "$FRONTEND_LOG" npm run dev -- --host 0.0.0.0
 
 echo
